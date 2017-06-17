@@ -9,7 +9,7 @@
     <a href="<c:url value="/product/addInit"/>">添加</a>
     <h1>商品列表</h1>
     <div style="padding: 10px; margin-bottom: 10px;">
-        <c:forEach var="product" items="${productList}">
+        <c:forEach var="product" items="${result.data}">
             <p>名称：${product.name}</p>
             <p>描述：${product.desc}</p>
             <p><a href="<c:url value="/product/detail"><c:param name = "id" value = "${product.id}"/></c:url>">详情</a></p>

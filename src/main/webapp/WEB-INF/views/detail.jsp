@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>商品详情</h1>
-    <p>商品名称：${product.name}</p>
-    <p>商品描述：${product.desc}</p>
+    <p>商品名称：${result.data.name}</p>
+    <p>商品描述：${result.data.desc}</p>
 </body>
 </html>

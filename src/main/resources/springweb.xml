@@ -30,7 +30,9 @@
         <property name="contentNegotiationManager" ref="contentNegotiatingManager"></property>
         <property name="defaultViews">
             <list>
-                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"></bean>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+                    <property name="modelKey" value="result"></property>
+                </bean>
                 <bean class="org.springframework.web.servlet.view.xml.MappingJackson2XmlView"></bean>
             </list>
         </property>

@@ -1,30 +1,20 @@
 package controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import exception.ProductNotFoundException;
 import model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import service.ProductService;
-import util.ClientTypeUtil;
-import util.JsonViewUtil;
+import util.ResultModel;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by admin on 2017/6/17.
@@ -39,7 +29,9 @@ public class ProductController {
     @RequestMapping("/list")
     public ModelAndView list() {
         ModelAndView modelAndView = new ModelAndView("list");
-        modelAndView.addObject("productList", productService.list());
+        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC,
+                "suc", productService.list());
+        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
         return modelAndView;
     }
 
@@ -53,15 +45,10 @@ public class ProductController {
     public ModelAndView addProduct(@RequestHeader HttpHeaders headers,
                                    Product product, HttpServletResponse response) {
         productService.add(product);
-        if (ClientTypeUtil.isAppClient(headers)) {
-            Map<String, Long> data = new HashMap<>();
-            data.put("id", product.getId());
-            JsonViewUtil.suc(response, "add suc", data);
-            return null;
-        } else {
-            ModelAndView modelAndView = new ModelAndView("forward:list");
-            return modelAndView;
-        }
+        ModelAndView modelAndView = new ModelAndView("forward:list");
+        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC, "add suc");
+        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        return modelAndView;
     }
 
     @RequestMapping("/detail")
@@ -69,21 +56,26 @@ public class ProductController {
                              @RequestHeader HttpHeaders headers,
                              HttpServletResponse response) {
         Product product = productService.get(id);
-        if (ClientTypeUtil.isAppClient(headers)) {
-            JsonViewUtil.suc(response, "find suc", product);
-            return null;
+        ModelAndView modelAndView = new ModelAndView("detail");
+        ResultModel resultModel = null;
+        if (product != null) {
+            resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC,
+                    "find suc", product);
         } else {
-            ModelAndView modelAndView = new ModelAndView("detail");
-            modelAndView.addObject("product", product);
-            return modelAndView;
+            resultModel = new ResultModel(ResultModel.RESULT_STATUS_FAIL,
+                    "not found");
         }
+        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        return modelAndView;
     }
 
     @RequestMapping("/updateInit")
     public ModelAndView updateInit(Long id) {
         ModelAndView modelAndView = new ModelAndView("update");
         Product product = productService.get(id);
-        modelAndView.addObject("product", product);
+        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC,
+                "suc", product);
+        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
         return modelAndView;
     }
 
@@ -92,13 +84,10 @@ public class ProductController {
                                @RequestHeader HttpHeaders headers,
                                HttpServletResponse response) {
         productService.update(product);
-        if (ClientTypeUtil.isAppClient(headers)) {
-            JsonViewUtil.suc(response, "update suc", null);
-            return null;
-        } else {
-            ModelAndView modelAndView = new ModelAndView("forward:list");
-            return modelAndView;
-        }
+        ModelAndView modelAndView = new ModelAndView("forward:list");
+        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC, "update suc");
+        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        return modelAndView;
     }
 
     @RequestMapping("/delete")
@@ -106,13 +95,10 @@ public class ProductController {
                                Long id,
                                HttpServletResponse response) {
         productService.delete(id);
-        if (ClientTypeUtil.isAppClient(headers)) {
-            JsonViewUtil.suc(response, "delete suc", null);
-            return null;
-        } else {
-            ModelAndView modelAndView = new ModelAndView("forward:list");
-            return modelAndView;
-        }
+        ModelAndView modelAndView = new ModelAndView("forward:list");
+        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC, "delete suc");
+        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        return modelAndView;
     }
 
     @ExceptionHandler(ProductNotFoundException.class)

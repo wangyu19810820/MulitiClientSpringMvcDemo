@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
         return productSet.stream()
                 .filter(p -> p.getId().equals(id))
                 .findAny()
-                .orElseThrow(ProductNotFoundException::new);
+                .orElse(null);
     }
 
     @Override
