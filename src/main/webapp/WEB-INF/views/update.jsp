@@ -10,9 +10,9 @@
 <body>
 <h1>更新商品</h1>
 <form action="<c:url value="/product/updateProduct"/>">
-    <input type="text" name="id" value="${result.data.id}">
-    <p>商品名称：<input type="text" name="name" value="${result.data.name}"></p>
-    <p>商品描述：<input type="text" name="desc" value="${result.data.desc}"></p>
+    <input type="text" name="id" value="${product.id}">
+    <p>商品名称：<input type="text" name="name" value="${product.name}"></p>
+    <p>商品描述：<input type="text" name="desc" value="${product.desc}"></p>
     <input type="submit">
 </form>
 </body>

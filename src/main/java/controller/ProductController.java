@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import service.ProductService;
 import util.ResultModel;
+import util.SelfModelAndView;
+import static util.ResultModel.ResultStatus;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,16 +30,14 @@ public class ProductController {
 
     @RequestMapping("/list")
     public ModelAndView list() {
-        ModelAndView modelAndView = new ModelAndView("list");
-        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC,
-                "suc", productService.list());
-        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        SelfModelAndView modelAndView = new SelfModelAndView("list");
+        modelAndView.addJsonAndViewData("productList", productService.list());
         return modelAndView;
     }
 
     @RequestMapping("/addInit")
     public ModelAndView addInit() {
-        ModelAndView modelAndView = new ModelAndView("add");
+        SelfModelAndView modelAndView = new SelfModelAndView("add");
         return modelAndView;
     }
 
@@ -45,9 +45,8 @@ public class ProductController {
     public ModelAndView addProduct(@RequestHeader HttpHeaders headers,
                                    Product product, HttpServletResponse response) {
         productService.add(product);
-        ModelAndView modelAndView = new ModelAndView("forward:list");
-        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC, "add suc");
-        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        SelfModelAndView modelAndView = new SelfModelAndView("forward:list");
+        modelAndView.setDesc("add suc");
         return modelAndView;
     }
 
@@ -56,26 +55,22 @@ public class ProductController {
                              @RequestHeader HttpHeaders headers,
                              HttpServletResponse response) {
         Product product = productService.get(id);
-        ModelAndView modelAndView = new ModelAndView("detail");
+        SelfModelAndView modelAndView = new SelfModelAndView("detail");
         ResultModel resultModel = null;
         if (product != null) {
-            resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC,
-                    "find suc", product);
+            modelAndView.setStatusAndDesc(ResultStatus.RESULT_STATUS_SUC, "find suc");
+            modelAndView.addJsonAndViewData("product", product);
         } else {
-            resultModel = new ResultModel(ResultModel.RESULT_STATUS_FAIL,
-                    "not found");
+            modelAndView.setStatusAndDesc(ResultStatus.RESULT_STATUS_FAIL, "not found");
         }
-        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
         return modelAndView;
     }
 
     @RequestMapping("/updateInit")
     public ModelAndView updateInit(Long id) {
-        ModelAndView modelAndView = new ModelAndView("update");
+        SelfModelAndView modelAndView = new SelfModelAndView("update");
         Product product = productService.get(id);
-        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC,
-                "suc", product);
-        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        modelAndView.addJsonAndViewData("product", product);
         return modelAndView;
     }
 
@@ -84,9 +79,8 @@ public class ProductController {
                                @RequestHeader HttpHeaders headers,
                                HttpServletResponse response) {
         productService.update(product);
-        ModelAndView modelAndView = new ModelAndView("forward:list");
-        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC, "update suc");
-        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        SelfModelAndView modelAndView = new SelfModelAndView("forward:list");
+        modelAndView.setDesc("update suc");
         return modelAndView;
     }
 
@@ -95,9 +89,8 @@ public class ProductController {
                                Long id,
                                HttpServletResponse response) {
         productService.delete(id);
-        ModelAndView modelAndView = new ModelAndView("forward:list");
-        ResultModel resultModel = new ResultModel(ResultModel.RESULT_STATUS_SUC, "delete suc");
-        modelAndView.addObject(ResultModel.RESULT_BEAN_NAME, resultModel);
+        SelfModelAndView modelAndView = new SelfModelAndView("forward:list");
+        modelAndView.setDesc("delete suc");
         return modelAndView;
     }
 
