@@ -42,8 +42,7 @@ public class ProductController {
     }
 
     @RequestMapping("/addProduct")
-    public ModelAndView addProduct(@RequestHeader HttpHeaders headers,
-                                   Product product, HttpServletResponse response) {
+    public ModelAndView addProduct(Product product) {
         productService.add(product);
         SelfModelAndView modelAndView = new SelfModelAndView("forward:list");
         modelAndView.setDesc("add suc");
@@ -51,9 +50,7 @@ public class ProductController {
     }
 
     @RequestMapping("/detail")
-    public ModelAndView detail(Long id,
-                             @RequestHeader HttpHeaders headers,
-                             HttpServletResponse response) {
+    public ModelAndView detail(Long id) {
         Product product = productService.get(id);
         SelfModelAndView modelAndView = new SelfModelAndView("detail");
         ResultModel resultModel = null;
@@ -75,9 +72,7 @@ public class ProductController {
     }
 
     @RequestMapping("/updateProduct")
-    public ModelAndView update(Product product,
-                               @RequestHeader HttpHeaders headers,
-                               HttpServletResponse response) {
+    public ModelAndView update(Product product) {
         productService.update(product);
         SelfModelAndView modelAndView = new SelfModelAndView("forward:list");
         modelAndView.setDesc("update suc");
@@ -85,9 +80,7 @@ public class ProductController {
     }
 
     @RequestMapping("/delete")
-    public ModelAndView delete(@RequestHeader HttpHeaders headers,
-                               Long id,
-                               HttpServletResponse response) {
+    public ModelAndView delete(Long id) {
         productService.delete(id);
         SelfModelAndView modelAndView = new SelfModelAndView("forward:list");
         modelAndView.setDesc("delete suc");
