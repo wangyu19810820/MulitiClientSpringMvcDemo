@@ -1,5 +1,8 @@
 package util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.HashMap;
 
 /**
@@ -41,11 +44,19 @@ public class ResultModel extends HashMap<String, Object> {
         put(DESC_KEY, desc);
     }
 
+    public String toJson() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String s= objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+            return s;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     @Override
     public String toString() {
-        return "ResultModel{" +
-                "status=" + ResultStatus.values()[(Integer)get(STATUS_KEY)] +
-                ", desc='" + get(DESC_KEY) + '\'' +
-                '}';
+        return toJson();
     }
 }
